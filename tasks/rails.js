@@ -56,14 +56,15 @@ module.exports = function(grunt) {
       _pidFile = options.pid;
     }
     
-    process.env['FRONT_END'] = options.env || 'debug';
+    var rails_path = options.rails_path || './';
+    var __pidFile = rails_path + _pidFile;
     
     switch(command) {
       case 'start':
         args.unshift('server');
         _currentProcess = spawn('rails', args, {
             stdio: ['ignore', process.stdout, 'ignore'], 
-            cwd: options.rails_path, 
+            cwd: rails_path, 
             env: process.env
         });
 
@@ -76,21 +77,23 @@ module.exports = function(grunt) {
 
           _currentProcess.on('close', function() {
             _currentProcess = spawn('rails', args, {
-              stdio: 'inherit'
+              stdio: 'inherit',
+              cwd: rails_path
             });
           });
 
           _currentProcess.kill('SIGQUIT');
         } else {
-          if(grunt.file.exists(_pidFile)) {
-            var killArgs = ['-s', 'QUIT', grunt.file.read(_pidFile)];
+          if(grunt.file.exists(__pidFile)) {
+            var killArgs = ['-s', 'QUIT', grunt.file.read(__pidFile)];
             var killTask = spawn('kill', killArgs, {
               stdio: 'ignore'
             });
 
             args.unshift('server');
             _currentProcess = spawn('rails', args, {
-              stdio: ['ignore', process.stdout, 'ignore']
+              stdio: ['ignore', process.stdout, 'ignore'],
+              cwd: options.rails_path
             });
           }
         }
@@ -99,8 +102,8 @@ module.exports = function(grunt) {
         if(_currentProcess) {
           _currentProcess.kill('QUIT');
         } else {
-          if(grunt.file.exists(_pidFile)) {
-            args = ['-s', 'QUIT', grunt.file.read(_pidFile)];
+          if(grunt.file.exists(__pidFile)) {
+            args = ['-s', 'QUIT', grunt.file.read(__pidFile)];
           }
           spawn('kill', args, {
             stdio: 'inherit'
