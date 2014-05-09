@@ -55,12 +55,16 @@ module.exports = function(grunt) {
     if(grunt.util._.has(options, "pid")) {
       _pidFile = options.pid;
     }
-
+    
+    process.env['FRONT_END'] = options.env || 'debug';
+    
     switch(command) {
       case 'start':
         args.unshift('server');
         _currentProcess = spawn('rails', args, {
-            stdio: ['ignore', process.stdout, 'ignore']
+            stdio: ['ignore', process.stdout, 'ignore'], 
+            cwd: options.rails_path, 
+            env: process.env
         });
 
         process.on('exit', function() {
