@@ -56,7 +56,7 @@ module.exports = function(grunt) {
       _pidFile = options.pid;
     }
     
-    var rails_path = options.rails_path || './';
+    var railsPath = options.railsPath || './';
     var __pidFile = rails_path + _pidFile;
     
     switch(command) {
@@ -64,7 +64,7 @@ module.exports = function(grunt) {
         args.unshift('server');
         _currentProcess = spawn('rails', args, {
             stdio: ['ignore', process.stdout, 'ignore'], 
-            cwd: rails_path, 
+            cwd: railsPath, 
             env: process.env
         });
 
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
           _currentProcess.on('close', function() {
             _currentProcess = spawn('rails', args, {
               stdio: 'inherit',
-              cwd: rails_path
+              cwd: railsPath
             });
           });
 
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
             args.unshift('server');
             _currentProcess = spawn('rails', args, {
               stdio: ['ignore', process.stdout, 'ignore'],
-              cwd: options.rails_path
+              cwd: railsPath
             });
           }
         }
