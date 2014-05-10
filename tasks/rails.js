@@ -57,7 +57,7 @@ module.exports = function(grunt) {
     }
     
     var railsPath = options.railsPath || './';
-    var __pidFile = rails_path + _pidFile;
+    var __pidFile = railsPath + _pidFile;
     
     switch(command) {
       case 'start':
